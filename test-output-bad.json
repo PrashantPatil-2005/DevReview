@@ -1,0 +1,94 @@
+{
+  "readability": {
+    "score": 3,
+    "comments": [
+      "Function 'processItems' has 6 top-level statements (max: 5). This may indicate too many responsibilities.",
+      "Function 'veryLongFunction' is 45 lines long (max: 40). Consider breaking it into smaller functions.",
+      "Variable 'a' has a non-descriptive name (1 chars). Use meaningful names.",
+      "Variable 'b' has a non-descriptive name (1 chars). Use meaningful names.",
+      "Variable 'c' has a non-descriptive name (1 chars). Use meaningful names.",
+      "Variable 'd' has a non-descriptive name (1 chars). Use meaningful names.",
+      "Deep nesting detected at line 18 (depth: 5, max: 4). Consider extracting logic or using early returns.",
+      "Deep nesting detected at line 19 (depth: 6, max: 4). Consider extracting logic or using early returns.",
+      "Deep nesting detected at line 92 (depth: 5, max: 4). Consider extracting logic or using early returns."
+    ]
+  },
+  "complexity": {
+    "score": 16,
+    "comments": [
+      "Function 'processItems' has cyclomatic complexity of 7. Consider simplifying control flow.",
+      "Function 'complexFunction' has cyclomatic complexity of 12. Consider simplifying control flow."
+    ]
+  },
+  "edgeCases": {
+    "score": 12,
+    "comments": [
+      "Async function 'fetchData' contains await expressions without try/catch error handling.",
+      "Array 'items' accessed at line 33 without prior length or null check.",
+      "External input 'req.body' used at line 12 without apparent validation.",
+      "External input 'req.body' used at line 36 without apparent validation."
+    ]
+  },
+  "security": {
+    "score": 8,
+    "comments": [
+      "Dangerous 'eval()' usage detected at line 30. This can execute arbitrary code and is a major security risk.",
+      "Potential hardcoded secret in variable 'apiKey' at line 3. Use environment variables instead.",
+      "Potential SQL injection: user input concatenated with SQL at line 36. Use parameterized queries."
+    ]
+  },
+  "totalScore": 39,
+  "decision": "NOT_READY_FOR_REVIEW",
+  "decisionReason": "Total score 39 is below minimum threshold (65). Critical deficiencies in: readability: 3, security: 8 (minimum: 10). Code requires significant improvements before review.",
+  "decisionDetails": {
+    "totalScore": 39,
+    "categoryScores": {
+      "readability": 3,
+      "complexity": 16,
+      "edgeCases": 12,
+      "security": 8
+    },
+    "failedCategories": [
+      "readability",
+      "security"
+    ],
+    "hasCriticalDeductions": true
+  },
+  "reviewCost": {
+    "level": "MEDIUM",
+    "score": 59,
+    "factors": {
+      "nestingDepth": {
+        "rawValue": 6,
+        "normalized": 75,
+        "weight": 0.25,
+        "contribution": 19
+      },
+      "cyclomaticComplexity": {
+        "rawValue": 12,
+        "normalized": 46,
+        "weight": 0.3,
+        "contribution": 14
+      },
+      "functionLength": {
+        "rawValue": 45,
+        "normalized": 45,
+        "weight": 0.2,
+        "contribution": 9
+      },
+      "securityDeductions": {
+        "rawValue": 17,
+        "normalized": 68,
+        "weight": 0.25,
+        "contribution": 17
+      }
+    },
+    "humanExplanation": "This code requires moderate review effort (RCI: 59). Main contributor: deep nesting. Reviewer may need to re-read sections for full understanding."
+  },
+  "metrics": {
+    "maxNestingDepth": 6,
+    "maxCyclomaticComplexity": 12,
+    "maxFunctionLength": 45,
+    "totalFunctions": 4
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "readability": {
+    "score": 25,
+    "comments": []
+  },
+  "complexity": {
+    "score": 22,
+    "comments": [
+      "Function 'processItems' has cyclomatic complexity of 6. Consider simplifying control flow."
+    ]
+  },
+  "edgeCases": {
+    "score": 22,
+    "comments": [
+      "Array 'input' accessed at line 69 without prior length or null check."
+    ]
+  },
+  "security": {
+    "score": 25,
+    "comments": []
+  },
+  "totalScore": 94,
+  "decision": "READY_FOR_HUMAN_REVIEW",
+  "decisionReason": "Code quality score 94/100 meets standards for human review.",
+  "decisionDetails": {
+    "totalScore": 94,
+    "categoryScores": {
+      "readability": 25,
+      "complexity": 22,
+      "edgeCases": 22,
+      "security": 25
+    },
+    "failedCategories": [],
+    "hasCriticalDeductions": false
+  },
+  "reviewCost": {
+    "level": "LOW",
+    "score": 16,
+    "factors": {
+      "nestingDepth": {
+        "rawValue": 2,
+        "normalized": 25,
+        "weight": 0.25,
+        "contribution": 6
+      },
+      "cyclomaticComplexity": {
+        "rawValue": 6,
+        "normalized": 21,
+        "weight": 0.3,
+        "contribution": 6
+      },
+      "functionLength": {
+        "rawValue": 21,
+        "normalized": 21,
+        "weight": 0.2,
+        "contribution": 4
+      },
+      "securityDeductions": {
+        "rawValue": 0,
+        "normalized": 0,
+        "weight": 0.25,
+        "contribution": 0
+      }
+    },
+    "humanExplanation": "This code is straightforward to review (RCI: 16). Clear structure and manageable complexity allow single-pass review."
+  },
+  "metrics": {
+    "maxNestingDepth": 2,
+    "maxCyclomaticComplexity": 6,
+    "maxFunctionLength": 21,
+    "totalFunctions": 3
+  }
+}
