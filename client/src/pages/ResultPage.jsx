@@ -13,7 +13,7 @@ function ResultPage() {
     useEffect(() => {
         const fetchReview = async () => {
             try {
-                const response = await fetch(`${API_URL}/reviews/${id}`);
+                const response = await fetch(`${API_URL}/api/reviews/${id}`);
                 const data = await response.json();
 
                 if (!response.ok) {

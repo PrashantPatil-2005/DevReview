@@ -16,7 +16,7 @@ function SubmitPage() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/analyze`, {
+            const response = await fetch(`${API_URL}/api/analyze`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code }),

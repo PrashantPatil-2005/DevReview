@@ -12,7 +12,7 @@ function HistoryPage() {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const response = await fetch(`${API_URL}/reviews`);
+                const response = await fetch(`${API_URL}/api/reviews`);
                 const data = await response.json();
 
                 if (!response.ok) {
