@@ -10,11 +10,15 @@
     },
     "rewrites": [
         {
+            "source": "/api/reviews/:id",
+            "destination": "/api/reviews/[id]"
+        },
+        {
             "source": "/api/(.*)",
             "destination": "/api/$1"
         },
         {
-            "source": "/(.*)",
+            "source": "/((?!api/).*)",
             "destination": "/index.html"
         }
     ]
