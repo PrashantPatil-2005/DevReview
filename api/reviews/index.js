@@ -5,7 +5,7 @@
  */
 
 const mongoose = require('mongoose');
-const Review = require('../src/models/Review');
+const Review = require('../../src/models/Review');
 
 let isConnected = false;
 
