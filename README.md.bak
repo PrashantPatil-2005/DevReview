@@ -1,0 +1,200 @@
+﻿# Static Code Review Engine
+
+A rule-based static code analysis engine for JavaScript/Node.js that evaluates code quality with deterministic, explainable scoring.
+
+## Problem Statement
+
+Code reviews are essential but inconsistent. Reviewers have different standards, varying attention levels, and limited time. This tool provides a baseline static analysis that:
+
+- Catches common issues before human review
+- Produces consistent, reproducible scores
+- Explains every deduction in human-readable terms
+- Works like a PR reviewer, not a linter
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                           CLIENT (React)                            │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌─────────┐ │
+│  │ Submit Page  │  │ Result Page  │  │ History Page │  │  About  │ │
+│  └──────────────┘  └──────────────┘  └──────────────┘  └─────────┘ │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  │ HTTP (JSON)
+                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                         SERVER (Express)                            │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                      API Routes                              │   │
+│  │  POST /analyze    GET /reviews    GET /reviews/:id           │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                                  │                                  │
+│                                  ▼                                  │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                   Analysis Engine                            │   │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │   │
+│  │  │ AST Parser  │──▶│   Rules    │──▶│   Scorer   │          │   │
+│  │  │   (Babel)   │  │  Modules   │  │ Aggregator │          │   │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘          │   │
+│  │                         │                                    │   │
+│  │        ┌────────────────┼────────────────┐                  │   │
+│  │        ▼                ▼                ▼                  │   │
+│  │  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌────────┐│   │
+│  │  │Readability│    │Complexity│    │Edge Cases│    │Security││   │
+│  │  │  Rules   │    │  Rules   │    │  Rules   │    │ Rules  ││   │
+│  │  └──────────┘    └──────────┘    └──────────┘    └────────┘│   │
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+                        ┌─────────────────┐
+                        │    MongoDB      │
+                        │   (Reviews)     │
+                        └─────────────────┘
+```
+
+## Scoring Philosophy
+
+### Deterministic, Not Probabilistic
+Same code → Same score. Always. No ML, no randomness, no API calls.
+
+### Penalty-Based
+Each category starts at 25 points. Rules deduct points for issues found.
+Total score = sum of all categories (0-100).
+
+### Explainable
+Every deduction produces a human-readable comment explaining why and where.
+
+### Categories (25 points each)
+
+| Category | What It Measures |
+|----------|------------------|
+| **Readability** | Function length, nesting depth, naming, complexity density |
+| **Complexity** | Cyclomatic complexity via decision point counting |
+| **Edge Cases** | Missing try/catch, unchecked array access, unvalidated input |
+| **Security** | eval(), child_process, hardcoded secrets, injection patterns |
+
+## Example Output
+
+Input:
+```javascript
+async function fetchUser(userId) {
+  const data = await db.query("SELECT * FROM users WHERE id = " + userId);
+  eval(data.script);
+  return data;
+}
+```
+
+Output:
+```json
+{
+  "readability": { "score": 25, "comments": [] },
+  "complexity": { "score": 25, "comments": [] },
+  "edgeCases": {
+    "score": 21,
+    "comments": [
+      "Async function 'fetchUser' contains await expressions without try/catch error handling."
+    ]
+  },
+  "security": {
+    "score": 9,
+    "comments": [
+      "Dangerous 'eval()' usage detected at line 3. This can execute arbitrary code and is a major security risk.",
+      "Potential SQL injection: user input concatenated with SQL at line 2. Use parameterized queries."
+    ]
+  },
+  "totalScore": 80
+}
+```
+
+## Known Limitations
+
+1. **Heuristics have false positives** - A short variable like `i` in a for-loop is fine, but unusual short names get flagged
+
+2. **Context is limited** - The tool cannot understand business logic or intent
+
+3. **Single-file only** - Cross-file analysis is not supported
+
+4. **Not a security scanner** - It detects smells, not vulnerabilities
+
+5. **Not a compiler** - Syntactically valid code might still have logic bugs
+
+## Project Structure
+
+```
+/
+├── src/                      # Backend
+│   ├── index.js              # Express server
+│   ├── parser/
+│   │   └── astParser.js      # Babel AST parsing
+│   ├── rules/
+│   │   ├── readability.js    # Readability rules
+│   │   ├── complexity.js     # Cyclomatic complexity
+│   │   ├── edgeCases.js      # Edge case detection
+│   │   └── security.js       # Security smells
+│   ├── scorer/
+│   │   └── aggregator.js     # Score aggregation
+│   ├── models/
+│   │   └── Review.js         # Mongoose schema
+│   ├── db/
+│   │   └── db.js             # MongoDB connection
+│   └── api/
+│       ├── analyzeRoute.js   # POST /analyze
+│       └── reviewsRoute.js   # GET /reviews
+│
+└── client/                   # Frontend (React)
+    └── src/
+        ├── App.jsx           # Router
+        └── pages/
+            ├── SubmitPage.jsx
+            ├── ResultPage.jsx
+            ├── HistoryPage.jsx
+            └── AboutPage.jsx
+```
+
+## Installation
+
+### Prerequisites
+- Node.js 18+
+- MongoDB (local or Atlas)
+
+### Backend
+```bash
+npm install
+npm start
+```
+
+### Frontend
+```bash
+cd client
+npm install
+npm run dev
+```
+
+### Environment Variables (Optional)
+```bash
+MONGODB_URI=mongodb://localhost:27017/code-reviewer
+PORT=3000
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/analyze` | Analyze code and save result |
+| GET | `/reviews` | List all past reviews |
+| GET | `/reviews/:id` | Get full review details |
+| GET | `/health` | Health check |
+
+## Why This Mirrors Real PR Reviews
+
+1. **Comments are specific** - Points to exact lines and issues
+2. **Tone is constructive** - "Consider..." rather than "Error:"
+3. **Categories match concerns** - Security, readability, edge cases are real review topics
+4. **Perfect score is possible** - Clean code gets 100/100
+
+## License
+
+MIT
+
