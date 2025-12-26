@@ -91,7 +91,15 @@ module.exports = async function handler(req, res) {
         }
 
         // Return result with optional review ID
+        // Wrap scores in a 'scores' object to match frontend expectations
         return res.status(200).json({
+            scores: {
+                readability: result.readability,
+                complexity: result.complexity,
+                edgeCases: result.edgeCases,
+                security: result.security,
+                totalScore: result.totalScore,
+            },
             ...result,
             _id: savedReview?._id || null,
             savedToDatabase: !!savedReview,
