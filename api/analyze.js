@@ -43,8 +43,20 @@ module.exports = async function handler(req, res) {
         });
     }
 
+    // Parse body - Vercel may pass it as string or object depending on content-type
+    let body = req.body;
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (e) {
+            return res.status(400).json({
+                error: 'Invalid JSON in request body',
+            });
+        }
+    }
+
     // Extract code from request body
-    const { code } = req.body || {};
+    const { code } = body || {};
 
     try {
         // Run analysis using existing engine
